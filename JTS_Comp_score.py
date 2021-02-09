@@ -40,10 +40,12 @@ stages = [
 ]
 
 #%%
-# 上記のリストを利用し、クラブ名、名前、ルーティン名で検索して一人を抜き出して df1 に格納
+# 上記のリストを利用し、クラブ名、名前、ルーティン名で検索して一人のデータ取り出して df1 に格納
 # その後、各ジャッジの点数が列として格納されているため、一旦ジャッジ名と点数のみを取り出して転置し df2 に格納
-# さらに、df1 と df2 のインデックスを一旦クリアし結合処理
+# 各スキルの原点を取り出して df3 に格納
+# さらに、df1, df2, df3 のインデックスを一旦クリアし結合処理
 # 上記すべてを関数化
+
 def main(team, name, stage):
     df1 = df[df['Representing'] == team]
     df1 = df1[df1['Given Name'] == name]
@@ -102,7 +104,7 @@ for fname in glob.glob(input_data+'*.xlsx'):
     ]]
 #%%
     # result_df という空のリストを用意
-    # for文にて、各選手の情報をリストから取り出して検索し、main() に渡す
+    # for文にて、各選手の情報をリストから取り出して検索し、main() に渡し、
     # 取り出された各選手のデータを result_df にリストとして格納
     # result_df に格納された各選手のデータを結合処理
 
@@ -114,6 +116,8 @@ for fname in glob.glob(input_data+'*.xlsx'):
                 result_df.append(main(team, name, stage))
 
     result_df = pd.concat(result_df)
+    
+    # すべてデータの無い行をドロップ
     result_df = result_df.dropna(how='all')
         
 #%%    
@@ -132,4 +136,3 @@ for fname in glob.glob(input_data+'*.xlsx'):
  
     # 読み込んだデータファイルに result_ を prefix として追加して output_files に保存
     result_df.to_excel(output_data+'results_'+file_name, index=False)
-# %%
