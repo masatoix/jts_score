@@ -56,12 +56,19 @@ def main(team, name, stage):
     df2 = df2.loc[:, ['Judge','∑']]
     df2 = df2.set_index('Judge')
     df2 = df2[0:10].T
-    
+
+    df3 = df[df['Representing'] == team]
+    df3 = df3[df3['Given Name'] == name]
+    df3 = df3[df3['Stage'] == stage]
+    df3 = df3.iloc[6:7, [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]]
+
     df1.reset_index(drop=True, inplace=True)
     df2.reset_index(drop=True, inplace=True)
+    df3.reset_index(drop=True, inplace=True)
 
-    df3 = pd.concat([df1, df2], axis=1)
-    return df3
+    df4 = pd.concat([df1, df2, df3], axis=1)
+
+    return df4
 
 #%%
 # 情報を取り出したいフォルダにある xlsx ファイルを一つずつ取り出して
@@ -80,16 +87,27 @@ for fname in glob.glob(input_data+'*.xlsx'):
     'Representing',
     'Mark',
     'Judge',
-    '∑'
+    '∑',
+    'S1',
+    'S2',
+    'S3',
+    'S4',
+    'S5',
+    'S6',
+    'S7',
+    'S8',
+    'S9',
+    'S10',
+    'L'
     ]]
-
+#%%
     # result_df という空のリストを用意
     # for文にて、各選手の情報をリストから取り出して検索し、main() に渡す
     # 取り出された各選手のデータを result_df にリストとして格納
     # result_df に格納された各選手のデータを結合処理
 
     result_df = []
-    
+
     for team in teams:
         for name in names:
             for stage in stages:
@@ -97,7 +115,8 @@ for fname in glob.glob(input_data+'*.xlsx'):
 
     result_df = pd.concat(result_df)
     result_df = result_df.dropna(how='all')
-
+        
+#%%    
     # lambda を使って、各列のスコアの桁数を調整
     result_df['Mark'] = result_df.apply(lambda x: x['Mark']/1000, axis=1)
     result_df['E1'] = result_df.apply(lambda x: x['E1']/10, axis=1)
@@ -110,8 +129,7 @@ for fname in glob.glob(input_data+'*.xlsx'):
     result_df['T'] = result_df.apply(lambda x: x['T']/1000, axis=1)
     result_df['D'] = result_df.apply(lambda x: x['D']/10, axis=1)
     result_df['H'] = result_df.apply(lambda x: x['H']/100, axis=1)
-
+ 
     # 読み込んだデータファイルに result_ を prefix として追加して output_files に保存
     result_df.to_excel(output_data+'results_'+file_name, index=False)
-
 # %%
