@@ -36,6 +36,7 @@ names = [
 
 stages = [
     'Qualification',
+    'Semifinal',
     'Final'
 ]
 
@@ -76,11 +77,11 @@ def main(team, name, stage):
 # 情報を取り出したいフォルダにある xlsx ファイルを一つずつ取り出して
 # ファイル名のみを file_name に格納して DataFrame として読み込む
 
-for fname in glob.glob(input_data+'*.xlsx'):
+for fname in glob.glob(input_data+'*.csv'):
     file_name = os.path.split(fname)[1]
     
     # 各大会のスコアデータの読み込み時に必要なデータのみ抽出
-    df = pd.read_excel(input_data+file_name)
+    df = pd.read_csv(input_data+file_name)
     df = df[[
     'Competition',
     'Stage',
@@ -135,4 +136,4 @@ for fname in glob.glob(input_data+'*.xlsx'):
     result_df['H'] = result_df.apply(lambda x: x['H']/100, axis=1)
  
     # 読み込んだデータファイルに result_ を prefix として追加して output_files に保存
-    result_df.to_excel(output_data+'results_'+file_name, index=False)
+    result_df.to_csv(output_data+'results_'+file_name, index=False, encoding='utf_8_sig')
